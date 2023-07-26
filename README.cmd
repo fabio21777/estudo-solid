@@ -1,5 +1,6 @@
 # Estudo de SOLID
 
+## Martin R.C. - Agile software development_ principles, patterns, and practices-Pearson
 ## O que é Design Ágil? (Capítulo 07)
 
 ### Odores de Design - Os Odores de Software Apodrecendo
