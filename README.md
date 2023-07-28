@@ -72,15 +72,48 @@ class User:
 
 ### Exemplo Bom
 ```python
-class User:
-    def __init__(self, name, email):
-        self.name = name
-        self.email = email
 
-    def get_user_info(self):
-        return f"Nome: {self.name}, Email: {self.email}"
+class Produto:
+    def __init__(self, nome, descricao):
+        self.nome = nome
+        self.descricao = descricao
 
-class UserDB:
-    def save_user(self, user):
-        pass  # código para salvar o usuário no banco de dados
+class ProdutoInfo:
+    def get_user_info(self, produto):
+        return f"Nome: {produto.nome}, Email: {produto.descricao}"
+
+class userComportamentoSetorVendas:
+    def comportamentoSetorVendas(self, produto):
+
+class userComportamentoSetorLogistica:
+    def comportamentoSetorLogistica(self, produto):
+
+class userComportamentoSetorArmazenamento:
+    def comportamentoSetorArmazenamento(self, produto)
+
+
+class ProdutoSave:
+    def produtoSave(self, produto):
+        pass  # código para salvar o produto
 ```
+
+### Vídeo sobre O Princípio da Responsabilidade Única
+
+[Dev Eficiente - Uma reflexão sobre o Princípio da responsabilidade única](https://youtu.be/GGe0o_v5vjM)
+
+[Otavio Lemos -  Princípio da responsabilidade única](https://youtu.be/fKAf74I3Yas)
+
+#### Pontos citados nos vídeos
+
+* Princípio da coesão
+* O autor do vídeo traz uma visão mais crítica sobre o Princípio da Responsabilidade Única, uma vez que pelo seu entendimento a responsabilidade de cada classe é subjetiva
+
+### Referências
+
+* [The Single Responsibility Principle](https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html)
+* [Principles of Software Engineering](https://www.d.umn.edu/~gshute/softeng/principles.html)
+
+### Minhas notas sobre o princípio
+
+O Princípio da Responsabilidade Única pode ser visto como uma divisão de módulos em que mudanças em códigos não devem quebrar códigos não relacionados. Temos como exemplo o código de Python acima. Adicionar novos comportamentos e informações a `UserComportamentoSetorArmazenamento` não vai quebrar as funcionalidades relacionadas a vendas e logística.
+
