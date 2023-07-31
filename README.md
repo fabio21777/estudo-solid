@@ -117,3 +117,101 @@ class ProdutoSave:
 
 O Princípio da Responsabilidade Única pode ser visto como uma divisão de módulos em que mudanças em códigos não devem quebrar códigos não relacionados. Temos como exemplo o código de Python acima. Adicionar novos comportamentos e informações a `UserComportamentoSetorArmazenamento` não vai quebrar as funcionalidades relacionadas a vendas e logística.
 
+## OCP: O Princípio Aberto-Fechado
+
+O Princípio Aberto-Fechado (Open-Closed Principle - OCP) é um dos cinco princípios de design orientado a objetos conhecidos como SOLID. O OCP afirma que "as entidades de software (classes, módulos, funções, etc.) devem estar abertas para extensão, mas fechadas para modificação". Em outras palavras, você deve ser capaz de adicionar novas funcionalidades ou comportamentos a uma entidade sem alterar seu código existente.
+
+Módulos que estão de acordo com o Princípio Aberto-Fechado possuem dois atributos principais:
+
+### Abertos para extensão
+
+Isso significa que o comportamento do módulo pode ser estendido. À medida que os requisitos da aplicação mudam, somos capazes de estender o módulo com novos comportamentos que satisfazem essas mudanças. Em outras palavras, somos capazes de mudar o que o módulo faz.
+
+### Fechados para modificação
+
+Estender o comportamento de um módulo não resulta em alterações no código fonte ou binário do módulo. A versão executável binária do módulo, seja em uma biblioteca linkável, um DLL ou um .jar Java, permanece intocada.
+
+Agora, vamos  a um exemplo de código Python que quebra o OCP :
+
+### Exemplo Ruim
+
+```python
+from abc import ABC, abstractmethod
+
+class Produto:
+    def __init__(self, nome, descricao):
+        self.nome = nome
+        self.descricao = descricao
+
+class ProdutoInfo:
+    def get_user_info(self, produto):
+        return f"Nome: {produto.nome}, Email: {produto.descricao}"
+
+class UserComportamento(ABC):
+    @abstractmethod
+    def comportamento(self, produto):
+        pass
+
+class UserComportamentoSetorVendas(UserComportamento):
+    def comportamento(self, produto):
+        pass  # implementação específica para o setor de vendas
+
+class UserComportamentoSetorLogistica(UserComportamento):
+    def comportamento(self, produto):
+        pass  # implementação específica para o setor de logística
+
+class UserComportamentoSetorArmazenamento(UserComportamento):
+    def comportamento(self, produto):
+        pass  # implementação específica para o setor de armazenamento
+
+class ProdutoSave:
+    def produtoSave(self, produto):
+        pass  # código para salvar o produto
+
+```
+
+Neste exemplo, a classe `UserComportamento` tem métodos específicos para cada setor. Se quiséssemos adicionar um novo setor, teríamos que modificar a classe `UserComportamento` para adicionar um novo método. Isso viola o OCP porque a classe `UserComportamento` não está fechada para modificação.
+
+Além disso, essa abordagem não é muito flexível. Se quiséssemos adicionar um novo comportamento que é específico para apenas um setor, teríamos que adicionar esse comportamento a todos os setores, mesmo que não seja relevante para eles. Isso pode levar a um código desnecessariamente complexo e difícil de manter.
+
+### Exemplo Bom (Strategy pattern:O cliente é tanto aberto quanto fechado)
+Uma maneira de aplicar o OCP seria criar uma interface ou classe abstrata que define um método para o comportamento do usuário, e então estender essa classe para cada setor. Aqui está um exemplo de como você poderia fazer isso em Python:
+
+```python
+from abc import ABC, abstractmethod
+
+class Produto:
+    def __init__(self, nome, descricao):
+        self.nome = nome
+        self.descricao = descricao
+
+class ProdutoInfo:
+    def get_user_info(self, produto):
+        return f"Nome: {produto.nome}, Email: {produto.descricao}"
+
+class UserComportamento(ABC):
+    @abstractmethod
+    def comportamento(self, produto):
+        pass
+
+class UserComportamentoSetorVendas(UserComportamento):
+    def comportamento(self, produto):
+        pass  # implementação específica para o setor de vendas
+
+class UserComportamentoSetorLogistica(UserComportamento):
+    def comportamento(self, produto):
+        pass  # implementação específica para o setor de logística
+
+class UserComportamentoSetorArmazenamento(UserComportamento):
+    def comportamento(self, produto):
+        pass  # implementação específica para o setor de armazenamento
+
+class ProdutoSave:
+    def produtoSave(self, produto):
+        pass  # código para salvar o produto
+```
+
+Nesta versão refatorada, criamos uma classe abstrata `UserComportamento` com um método abstrato `comportamento()`. Cada setor tem sua própria classe que estende `UserComportamento` e implementa o método `comportamento()`. Agora, cada classe `UserComportamentoSetorX` está aberta para extensão (podemos adicionar novos comportamentos específicos do setor), mas fechada para modificação (não precisamos alterar a classe `UserComportamento` ou qualquer outra classe `UserComportamentoSetorX` existente para adicionar um novo comportamento).
+
+Ao seguir o Princípio Aberto-Fechado, podemos tornar nosso código mais flexível e fácil de manter.
+
