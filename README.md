@@ -215,3 +215,9 @@ Nesta versão refatorada, criamos uma classe abstrata `UserComportamento` com um
 
 Ao seguir o Princípio Aberto-Fechado, podemos tornar nosso código mais flexível e fácil de manter.
 
+### Referências / leituras
+* [SOLID: OCP - Open/Closed Principle (Princípio do Aberto/Fechado - André Secco)](https://youtu.be/UlSNpWFTU3Q)
+* [SOLID #2: Princípio do aberto/fechado - (Dev Eficiente)](https://youtu.be/UlSNpWFTU3Q)
+* [The Open Closed Principle](https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html)
+* [Open/Closed Principle: objetos flexíveis](https://github.com/caelum/apostila-oo-avancado-em-java/blob/master/05-open-closed-principle.md)
+* [Princípio aberto/fechado Otavio Lemos](https://youtu.be/hKQgL-RSgRw)
