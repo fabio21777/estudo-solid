@@ -147,26 +147,20 @@ class ProdutoInfo:
     def get_user_info(self, produto):
         return f"Nome: {produto.nome}, Email: {produto.descricao}"
 
-class UserComportamento(ABC):
-    @abstractmethod
-    def comportamento(self, produto):
-        pass
-
-class UserComportamentoSetorVendas(UserComportamento):
-    def comportamento(self, produto):
+class UserComportamento:
+    def comportamentoSetorVendas(self, produto):
         pass  # implementação específica para o setor de vendas
 
-class UserComportamentoSetorLogistica(UserComportamento):
-    def comportamento(self, produto):
+    def comportamentoSetorLogistica(self, produto):
         pass  # implementação específica para o setor de logística
 
-class UserComportamentoSetorArmazenamento(UserComportamento):
-    def comportamento(self, produto):
+    def comportamentoSetorArmazenamento(self, produto):
         pass  # implementação específica para o setor de armazenamento
 
 class ProdutoSave:
     def produtoSave(self, produto):
         pass  # código para salvar o produto
+
 
 ```
 
