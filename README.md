@@ -221,3 +221,74 @@ Ao seguir o Princípio Aberto-Fechado, podemos tornar nosso código mais flexív
 * [The Open Closed Principle](https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html)
 * [Open/Closed Principle: objetos flexíveis](https://github.com/caelum/apostila-oo-avancado-em-java/blob/master/05-open-closed-principle.md)
 * [Princípio aberto/fechado Otavio Lemos](https://youtu.be/hKQgL-RSgRw)
+
+
+## LSP: O Princípio de Substituição de Liskov
+
+O Princípio de Substituição de Liskov (LSP, do inglês Liskov Substitution Principle) é um dos cinco princípios do SOLID, um conjunto de práticas de programação orientada a objetos que visa melhorar a manutenção e extensibilidade do código.
+
+Este princípio foi introduzido por Barbara Liskov em 1987 e afirma que, em um programa de computador, se S é um subtipo de T, então os objetos de tipo T podem ser substituídos pelos objetos de tipo S (ou seja, os objetos de tipo S podem substituir os objetos de tipo T) sem alterar as propriedades desejáveis desse programa (corretude, tarefas executadas, etc.).
+
+Por exemplo, se você tem uma classe "Animal" com uma função "falar", e tem uma subclasse "Cão" que também tem a função "falar", então de acordo com o LSP, você deveria poder usar a classe "Cão" em qualquer lugar que você usaria a classe "Animal" e o programa ainda funcionaria corretamente.
+
+Se a substituição do "Animal" pelo "Cão" causa algum comportamento inesperado, então o código está violando o Princípio de Substituição de Liskov. A importância deste princípio é que ele permite a polimorfismo e a reutilização de código sem surpresas.
+
+```python
+from abc import ABC, abstractmethod
+
+class Comportamento(ABC):
+    @abstractmethod
+    def executar(self, produto):
+        pass
+class ComportamentoSetorVendas(Comportamento):
+    def executar(self, produto):
+        return f"Vendendo {produto.nome}."
+
+class ComportamentoSetorLogistica(Comportamento):
+    def executar(self, produto):
+        return f"Logística para {produto.nome}."
+
+class ComportamentoSetorArmazenamento(Comportamento):
+    def executar(self, produto):
+        return f"Armazenando {produto.nome}."
+
+class Produto:
+    def __init__(self, nome, descricao):
+        self.nome = nome
+        self.descricao = descricao
+
+class ProdutoInfo:
+    def __init__(self, comportamento):
+        self.comportamento = comportamento
+
+    def get_info(self, produto):
+        return f"Nome: {produto.nome}, Descrição: {produto.descricao}, Comportamento: {self.comportamento.executar(produto)}"
+```
+### 1. Classe Comportamento
+
+A classe Comportamento é uma classe abstrata, que serve como uma espécie de "modelo" para outras classes. Essa classe define um método chamado executar, mas não fornece uma implementação para esse método - em vez disso, ela espera que as classes que herdam dela forneçam essa implementação. Esse é um conceito fundamental em programação orientada a objetos chamado "polimorfismo".
+
+### 2. Classes ComportamentoSetorVendas, ComportamentoSetorLogistica e ComportamentoSetorArmazenamento
+
+Essas são subclasses da classe Comportamento. Cada uma dessas classes fornece sua própria implementação do método executar. Cada implementação é única para a classe em que é definida. Por exemplo, a classe ComportamentoSetorVendas implementa executar de uma forma que indica que o produto está sendo vendido, enquanto a classe ComportamentoSetorLogistica implementa executar de uma forma que indica que o produto está sendo preparado para logística.
+
+### 3. Classe Produto
+
+A classe Produto é simplesmente uma classe que representa um produto. Ela tem dois atributos: nome e descricao.
+
+### 4. Classe ProdutoInfo
+
+A classe ProdutoInfo é uma classe que usa os objetos de Produto e Comportamento. Ela tem um método chamado get_info, que retorna uma string contendo o nome do produto, sua descrição, e o resultado de executar o comportamento.
+
+Na prática, isso permite que você crie objetos ProdutoInfo que possuem diferentes comportamentos, e você pode chamar o método get_info para ver como esses diferentes comportamentos afetam o produto.
+
+### Como isso se relaciona com o Princípio de Substituição de Liskov?
+
+O Princípio de Substituição de Liskov está relacionado ao polimorfismo, que é a capacidade de usar um objeto de uma subclasse onde um objeto da superclasse é esperado. No exemplo que fornecemos, qualquer objeto que seja uma instância de uma subclasse de Comportamento (ou seja, ComportamentoSetorVendas, ComportamentoSetorLogistica ou ComportamentoSetorArmazenamento) pode ser usado onde um objeto Comportamento é esperado.
+
+Em outras palavras, um objeto ComportamentoSetorVendas pode ser usado em lugar de um objeto Comportamento sem quebrar a aplicação. Isso é uma demonstração do Princípio de Substituição de Liskov.
+
+### Referências / leituras
+* [A Behavioral Notion of Subtyping](https://www.csnell.net/computerscience/Liskov_subtypes.pdf)
+* [Applying “Design by Contract](https://pages.mtu.edu/~aebnenas/teaching/spring2010/cs3141/readings/meyerPDF.pdf)
+* [SOLID #3: Princípio de substituição de Liskov - (Dev Eficiente)](https://youtu.be/MiV_tI3fNPQ)
