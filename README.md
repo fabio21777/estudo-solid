@@ -286,3 +286,95 @@ Em outras palavras, um objeto ComportamentoSetorVendas pode ser usado em lugar d
 * [A Behavioral Notion of Subtyping](https://www.csnell.net/computerscience/Liskov_subtypes.pdf)
 * [Applying “Design by Contract](https://pages.mtu.edu/~aebnenas/teaching/spring2010/cs3141/readings/meyerPDF.pdf)
 * [SOLID #3: Princípio de substituição de Liskov - (Dev Eficiente)](https://youtu.be/MiV_tI3fNPQ)
+
+
+## O Princípio da Segregação de Interface(ISP: The Interface-Segregation Principle)
+
+**O Princípio da Segregação de Interface (ISP): Uma Abordagem Simples e Elegante**
+
+Em programação orientada a objetos, o Princípio da Segregação de Interface (ISP) é uma diretriz crucial que ajuda a manter o código limpo e eficiente. Mas o que exatamente isso significa, e por que é tão importante?
+
+### O Que É o ISP?
+
+O ISP é um dos cinco princípios SOLID que guiam o design de software eficaz. Ele afirma que uma classe não deve ser forçada a implementar interfaces que não utiliza. Em outras palavras, é melhor ter várias interfaces específicas em vez de uma única interface geral.
+
+### Por Que Isso é Importante?
+
+Imagine que você tem uma classe que implementa uma interface com muitos métodos, mas só precisa de alguns deles. Isso pode levar a uma complexidade desnecessária e tornar o código mais difícil de manter. O ISP ajuda a evitar esse problema, garantindo que as classes só precisem conhecer os métodos que realmente usam.
+
+### Um Exemplo Prático
+
+Pense em uma porta (classe Door) que tem uma interface com métodos para abrir e fechar. Agora, imagine que você quer adicionar uma funcionalidade de temporização (Timer). De acordo com o ISP, você não deve simplesmente adicionar métodos de temporização à interface existente da Door. Isso poluiria a interface com métodos que nem todas as portas precisam.
+
+Em vez disso, você pode criar uma interface separada para Timer e usar um adaptador para conectar as duas interfaces quando necessário. Isso mantém as interfaces limpas e separadas, e permite que as classes implementem apenas os métodos que realmente precisam.
+
+### Conclusão
+
+O Princípio da Segregação de Interface é uma ferramenta poderosa para criar código modular e fácil de manter. Ao garantir que as interfaces sejam pequenas e específicas, você pode evitar a complexidade desnecessária e tornar seu código mais flexível e robusto.
+
+Lembre-se, o objetivo do ISP não é apenas tornar o código mais eficiente, mas também torná-lo mais compreensível e gerenciável. É uma abordagem que vale a pena considerar em qualquer projeto de desenvolvimento de software!
+
+
+```python
+from abc import ABC, abstractmethod
+
+class InterfaceVendas(ABC):
+    @abstractmethod
+    def vender(self, produto):
+        pass
+
+class InterfaceEstoque(ABC):
+    @abstractmethod
+    def adicionar_estoque(self, produto, quantidade):
+        pass
+    @abstractmethod
+    def remover_estoque(self, produto, quantidade):
+        pass
+
+#a class precisa das duas interfaces
+class LojaOnline(InterfaceVendas, InterfaceEstoque):
+    def __init__(self):
+        self.estoque = {}
+
+    def vender(self, produto):
+        if self.estoque.get(produto, 0) > 0:
+            self.remover_estoque(produto, 1)
+            return f"Vendido {produto}."
+        else:
+            return f"{produto} está fora de estoque."
+
+    def adicionar_estoque(self, produto, quantidade):
+        self.estoque[produto] = self.estoque.get(produto, 0) + quantidade
+        return f"{quantidade} unidades de {produto} adicionadas ao estoque."
+
+    def remover_estoque(self, produto, quantidade):
+        self.estoque[produto] = max(self.estoque.get(produto, 0) - quantidade, 0)
+        return f"{quantidade} unidades de {produto} removidas do estoque."
+
+loja = LojaOnline()
+print(loja.adicionar_estoque("Laptop", 5))  # Saída: 5 unidades de Laptop adicionadas ao estoque.
+print(loja.vender("Laptop"))  # Saída: Vendido Laptop.
+print(loja.remover_estoque("Laptop", 2))  # Saída: 2 unidades de Laptop removidas do estoque.
+
+
+# class precisa apenas da interface de InterfaceEstoque
+
+class GerenciadorDeEstoque(InterfaceEstoque):
+    def __init__(self):
+        self.estoque = {}
+
+    def adicionar_estoque(self, produto, quantidade):
+        self.estoque[produto] = self.estoque.get(produto, 0) + quantidade
+        return f"{quantidade} unidades de {produto} adicionadas ao estoque."
+
+    def remover_estoque(self, produto, quantidade):
+        self.estoque[produto] = max(self.estoque.get(produto, 0) - quantidade, 0)
+        return f"{quantidade} unidades de {produto} removidas do estoque."
+
+gerenciador = GerenciadorDeEstoque()
+print(gerenciador.adicionar_estoque("Teclado", 10))  # Saída: 10 unidades de Teclado adicionadas ao estoque.
+print(gerenciador.remover_estoque("Teclado", 3))  # Saída: 3 unidades de Teclado removidas do estoque.
+```
+Agora temos duas classes diferentes, LojaOnline e GerenciadorDeEstoque, que implementam as interfaces de acordo com suas necessidades. A classe LojaOnline implementa ambas as interfaces InterfaceVendas e InterfaceEstoque, pois é responsável tanto pelas vendas quanto pelo gerenciamento do estoque. A classe GerenciadorDeEstoque, por outro lado, implementa apenas a interface InterfaceEstoque, pois é responsável apenas pelo gerenciamento do estoque.
+
+Isso demonstra a flexibilidade e a modularidade proporcionadas pelo Princípio da Segregação de Interface (ISP), permitindo que diferentes classes implementem as interfaces que são relevantes para suas responsabilidades específicas.
