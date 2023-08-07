@@ -318,11 +318,6 @@ Lembre-se, o objetivo do ISP não é apenas tornar o código mais eficiente, mas
 ```python
 from abc import ABC, abstractmethod
 
-class InterfaceVendas(ABC):
-    @abstractmethod
-    def vender(self, produto):
-        pass
-
 class InterfaceEstoque(ABC):
     @abstractmethod
     def adicionar_estoque(self, produto, quantidade):
@@ -331,8 +326,12 @@ class InterfaceEstoque(ABC):
     def remover_estoque(self, produto, quantidade):
         pass
 
-#a class precisa das duas interfaces
-class LojaOnline(InterfaceVendas, InterfaceEstoque):
+    class InterfaceVendas(InterfaceEstoque):
+    @abstractmethod
+    def vender(self, produto):
+        pass
+
+class LojaOnline(InterfaceVendas):
     def __init__(self):
         self.estoque = {}
 
@@ -378,3 +377,84 @@ print(gerenciador.remover_estoque("Teclado", 3))  # Saída: 3 unidades de Teclad
 Agora temos duas classes diferentes, LojaOnline e GerenciadorDeEstoque, que implementam as interfaces de acordo com suas necessidades. A classe LojaOnline implementa ambas as interfaces InterfaceVendas e InterfaceEstoque, pois é responsável tanto pelas vendas quanto pelo gerenciamento do estoque. A classe GerenciadorDeEstoque, por outro lado, implementa apenas a interface InterfaceEstoque, pois é responsável apenas pelo gerenciamento do estoque.
 
 Isso demonstra a flexibilidade e a modularidade proporcionadas pelo Princípio da Segregação de Interface (ISP), permitindo que diferentes classes implementem as interfaces que são relevantes para suas responsabilidades específicas.
+
+### Referências / leituras
+
+* [SOLID #4: Princípio de segregação pela interface (ISP)- dev eficiente](https://youtu.be/0Jv31svi0qA)
+
+* [SOLID: ISP - Interface Segregation Principle (Princípio da Segregação de Interfaces)](https://youtu.be/QeuojKDdQNI)
+
+* [O que é SOLID: O guia completo para você entender os 5 princípios da POO](https://medium.com/desenvolvendo-com-paixao/o-que-%C3%A9-solid-o-guia-completo-para-voc%C3%AA-entender-os-5-princ%C3%ADpios-da-poo-2b937b3fc530)
+
+
+### O Princípio da Inversão de Dependência: Uma Abordagem Simples e Eficaz
+
+O Princípio da Inversão de Dependência (DIP) é um dos cinco princípios SOLID da programação orientada a objetos. É uma abordagem poderosa que ajuda a criar sistemas mais flexíveis, robustos e testáveis. Mas o que exatamente é o DIP e por que ele é tão importante? Vamos explorar!
+
+#### O Que é o Princípio da Inversão de Dependência?
+
+O DIP afirma que as classes de alto nível, que geralmente contêm a lógica principal do programa, não devem depender diretamente das classes de baixo nível, que geralmente realizam tarefas mais específicas. Em vez disso, ambas devem depender de abstrações.
+
+Em outras palavras, em vez de escrever código que depende de detalhes específicos, você deve escrever código que depende de interfaces ou classes abstratas. Isso inverte a direção tradicional da dependência, daí o nome "Inversão de Dependência."
+
+#### Por Que Usar o DIP?
+
+1. **Flexibilidade**: Ao depender de abstrações, você pode facilmente substituir uma implementação por outra sem alterar o código de alto nível. Isso torna o sistema mais flexível e adaptável às mudanças.
+2. **Testabilidade**: O DIP facilita o teste de unidades, permitindo que você substitua dependências reais por simulações (mocks) durante o teste.
+3. **Manutenibilidade**: Reduzir as dependências diretas torna o código mais fácil de entender e manter, pois cada parte do sistema tem responsabilidades claramente definidas.
+
+
+#### Conclusão
+
+O Princípio da Inversão de Dependência é uma ferramenta poderosa para criar sistemas mais robustos, flexíveis e testáveis. Ao focar em abstrações em vez de detalhes concretos, você pode construir código que é mais fácil de manter e adaptar às mudanças. Experimente em seu próximo projeto e veja a diferença que ele pode fazer!
+
+
+```python
+from abc import ABC, abstractmethod
+
+class IProdutoRepositorio(ABC):
+    @abstractmethod
+    def obter_produto(self, produto_id):
+        pass
+
+    @abstractmethod
+    def salvar_produto(self, produto):
+        pass
+
+class Produto:
+    def __init__(self, produto_id, preco):
+        self.produto_id = produto_id
+        self.preco = preco
+
+class ProdutoRepositorio(IProdutoRepositorio):
+    def __init__(self):
+        self.produtos = {}
+
+    def obter_produto(self, produto_id):
+        return self.produtos.get(produto_id)
+
+    def salvar_produto(self, produto):
+        self.produtos[produto.produto_id] = produto
+
+class Venda:
+    def __init__(self, produto_repositorio: IProdutoRepositorio):
+        self.produto_repositorio = produto_repositorio
+
+    def realizar_venda(self, produto_id, quantidade):
+        produto = self.produto_repositorio.obter_produto(produto_id)
+        if produto:
+            total = produto.preco * quantidade
+            return f"Venda realizada: {quantidade} unidades de {produto_id} por {total}."
+        else:
+            return f"Produto {produto_id} não encontrado."
+
+repositorio = ProdutoRepositorio()
+produto = Produto("123", 50.0)
+repositorio.salvar_produto(produto)
+
+venda = Venda(repositorio)
+resultado = venda.realizar_venda("123", 2)
+print(resultado)  # Saída: Venda realizada: 2 unidades de 123 por 100.0.
+
+
+```
